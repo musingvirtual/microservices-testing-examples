@@ -100,6 +100,9 @@ jobs:
 
       - id: pact-special-membership
         run: |
+          STEP_ID=pact_special-membership
+          STEP_START=$(date +%s)
+          
           # verify pacts
           mvn verify -pl special-membership-service -Pprovider-pacts -Dpact.verifier.publishResults=true -Dpact.provider.version=`git rev-parse --short HEAD` -Dpactbroker.tags=prod -Dpactbroker.user=rw_user -Dpactbroker.pass=rw_pass
           # create pacts
@@ -115,6 +118,8 @@ jobs:
           docker run --rm --net host ${PACT_CLI_IMG} broker can-i-deploy -v --pacticipant special-membership-service --version `git rev-parse --short HEAD` --to prod --broker-base-url ${PACT_BROKER_URL} --broker-username=rw_user --broker-password=rw_pass
           # tag pacts as production
           docker run --rm --net host ${PACT_CLI_IMG} broker create-version-tag --auto-create-version --pacticipant special-membership-service --version `git rev-parse --short HEAD` --tag prod --broker-base-url ${PACT_BROKER_URL} --broker-username=rw_user --broker-password=rw_pass
+
+          buildevents step $TRACE_ID $STEP_ID $STEP_START $STEP_ID
 
       - id: build-credit-score
         run: |
