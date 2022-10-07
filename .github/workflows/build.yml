@@ -60,6 +60,8 @@ jobs:
           STEP_ID=build_welcome-member-email-service
           STEP_START=$(date +%s)
           
+          false
+          
           # build
           mvn clean verify -pl welcome-member-email-service -Pcode-coverage -Pstatic-code-analysis
           
